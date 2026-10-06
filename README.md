@@ -6,14 +6,17 @@
 
 ```bash
 npm ci
-cp -n .env.example .env
+```
+
+กำหนดค่า environment ใน PowerShell ก่อนรัน server โดยไม่ต้องสร้างไฟล์ `.env`:
+
+```powershell
+$env:MONGODB_URI = "mongodb://127.0.0.1:27017/typescript1"
+$env:PORT = "3000"
 npm run dev
 ```
 
-บน Windows PowerShell ใช้ `Copy-Item .env.example .env` แทนคำสั่ง `cp` จากนั้นแก้
-`MONGODB_URI` ใน `.env` ให้เป็น connection string ของ MongoDB Atlas หรือ MongoDB ในเครื่องก่อนรัน server
-(`.env` ถูก ignore โดย Git) จากนั้นเปิด `/test.html` บนพอร์ตที่ตั้งไว้ใน `PORT` เพื่อทดลองเพิ่มผู้ใช้
-หากพอร์ต 3000 ถูกใช้งาน ให้เปลี่ยน `PORT` ใน `.env`
+จากนั้นเปิด `/test.html` บนพอร์ตที่ตั้งไว้ใน `PORT` เพื่อทดลองเพิ่มผู้ใช้
 
 ```bash
 npm run build
