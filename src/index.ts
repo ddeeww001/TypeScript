@@ -14,8 +14,9 @@ app.use(express.static(path.join(__dirname, '../src/public')));
 
 app.get('/', (_req: Request, res: Response) => {
   if (!mongoUri) {
+    res.send('Hello, World!');
     res.status(503).send('Server is running, but MONGODB_URI is not configured.');
-    return;
+    return ;
   }
   res.send('Hello, World!');
 });
