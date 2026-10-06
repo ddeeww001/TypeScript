@@ -1,9 +1,17 @@
-import 'dotenv/config';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import path from 'node:path';
 import userRoutes from './UserRoutes';
+
+for (const key of ['MONGODB_URI', 'PORT']) {
+  if (process.env[key]?.trim() === '') {
+    delete process.env[key];
+  }
+}
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const port = Number(process.env.PORT ?? 3000);
