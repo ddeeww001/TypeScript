@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User API test</title>
+</head>
+<body>
+  <h1>User API test</h1>
+
+  <h2>GET /api/users</h2>
+  <button id="get-users" type="button">Get all users</button>
+
+  <h2>GET /api/users/:id</h2>
+  <form id="get-user">
+    <label>User ID <input name="id" required></label>
+    <button type="submit">Get user</button>
+  </form>
+
+  <h2>POST /api/users</h2>
+  <form id="create-user">
+    <label>Name <input name="name" required></label>
+    <label>Email <input name="email" type="email" required></label>
+    <label>Password <input name="password" type="password" required></label>
+    <button type="submit">Add user</button>
+  </form>
+
+  <h2>PUT /api/users/:id</h2>
+  <p>Fill in only the fields you want to change.</p>
+  <form id="update-user">
+    <label>User ID <input name="id" required></label>
+    <label>Name <input name="name"></label>
+    <label>Email <input name="email" type="email"></label>
+    <label>Password <input name="password" type="password"></label>
+    <button type="submit">Update user</button>
+  </form>
+
+  <h2>DELETE /api/users/:id</h2>
+  <form id="delete-user">
+    <label>User ID <input name="id" required></label>
+    <button type="submit">Delete user</button>
+  </form>
+
+  <p id="status" role="status" hidden></p>
+
+  <script>
+    const status = document.getElementById('status');
+
+    async function request(method, url, data) {
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach((button) => { button.disabled = true; });
+      status.textContent = `${method} ${url}: Loading...`;
+      try {
+        const options = { method };
+        if (data !== undefined) {
+          options.headers = { 'Content-Type': 'application/json' };
+          options.body = JSON.stringify(data);
+        }
+        const response = await fetch(url, options);
+        status.textContent = `${method} ${url}: HTTP ${response.status} ${response.ok ? 'OK' : 'Error'}`;
+        return response.ok;
+      } catch {
+        status.textContent = `${method} ${url}: Could not reach the server`;
+        return false;
+      } finally {
+        buttons.forEach((button) => { button.disabled = false; });
+      }
+    }
+
+    document.getElementById('get-users').addEventListener('click', () => {
+      request('GET', '/api/users');
+    });
+
+    function handleForm(formId, method) {
+      document.getElementById(formId).addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const data = Object.fromEntries(new FormData(form));
+        const id = data.id?.trim();
+        delete data.id;
+        if (method !== 'POST' && !id) {
+          status.textContent = 'User ID is required';
+          return;
+        }
+        if (method === 'PUT') {
+          Object.keys(data).forEach((key) => {
+            if (!data[key].trim()) delete data[key];
+          });
+          if (Object.keys(data).length === 0) {
+            status.textContent = 'Fill in at least one field to update';
+            return;
+          }
+        }
+        if (method === 'DELETE' && !confirm(`Delete user ${id}?`)) return;
+        const url = method === 'POST' ? '/api/users' : `/api/users/${encodeURIComponent(id)}`;
+        const body = method === 'POST' || method === 'PUT' ? data : undefined;
+        if (await request(method, url, body)) {
+          if (method === 'POST') form.reset();
+          if (method === 'PUT') form.elements.password.value = '';
+        }
+      });
+    }
+
+    handleForm('get-user', 'GET');
+    handleForm('create-user', 'POST');
+    handleForm('update-user', 'PUT');
+    handleForm('delete-user', 'DELETE');
+  </script>
+</body>
+</html>
