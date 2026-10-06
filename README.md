@@ -1,6 +1,6 @@
-# Deployment part 2–3: TypeScript, GitHub Actions และ MongoDB
+# Deployment part 2–3: TypeScript และ GitHub Actions
 
-โปรเจกต์นี้ทำตามตัวอย่างใน `สำเนาของ part2.pdf` และ `สำเนาของ part3.pdf` โดยมี Express server, TypeScript build, unit test, GitHub Actions และ User API ที่ใช้ MongoDB
+โปรเจกต์นี้มี Express server, TypeScript build, unit test, GitHub Actions และ User API ที่เก็บข้อมูลไว้ในหน่วยความจำของ server
 
 ## รันในเครื่อง
 
@@ -8,10 +8,9 @@
 npm ci
 ```
 
-กำหนดค่า environment ใน PowerShell ก่อนรัน server โดยไม่ต้องสร้างไฟล์ `.env`:
+ไม่ต้องกำหนด `MONGODB_URI` หรือสร้างไฟล์ `.env`:
 
 ```powershell
-$env:MONGODB_URI = "mongodb://127.0.0.1:27017/typescript1"
 $env:PORT = "3000"
 npm run dev
 ```
@@ -57,7 +56,7 @@ docker container ls
 docker run --rm hello-world
 ```
 
-หากต้องการทดลอง MongoDB ในเครื่อง สามารถใช้ `MONGODB_URI=mongodb://127.0.0.1:27017/typescript1` ใน `.env` เมื่อมี MongoDB ที่รันอยู่ หรือใช้ MongoDB Atlas ตามสไลด์
+ข้อมูลผู้ใช้จะถูกเก็บชั่วคราวในหน่วยความจำและจะหายเมื่อ server หยุดทำงานหรือ restart
 
 ## Git และ CI
 

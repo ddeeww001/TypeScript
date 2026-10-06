@@ -3,20 +3,3 @@ services:
     build: .
     ports:
       - "127.0.0.1:3104:3000"
-    environment:
-      PORT: "3000"
-      MONGODB_URI: mongodb://db:27017/typescript1_part4
-    depends_on:
-      db:
-        condition: service_healthy
-  db:
-    image: mongo:8.0
-    volumes:
-      - mongo_data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand({ ping: 1 })"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-volumes:
-  mongo_data:

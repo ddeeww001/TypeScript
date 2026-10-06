@@ -4,10 +4,6 @@ import { randomUUID } from 'node:crypto';
 import { once } from 'node:events';
 import { setTimeout as sleep } from 'node:timers/promises';
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('MONGODB_URI is required for the API test');
-}
-
 const port = process.env.PORT ?? '3100';
 const base = `http://127.0.0.1:${port}`;
 const server = spawn(process.execPath, ['dist/index.js'], {
@@ -24,7 +20,7 @@ async function waitForServer() {
       const response = await fetch(base);
       if (response.ok) return;
     } catch {
-      // The server may still be connecting to MongoDB.
+      // The server may still be starting.
     }
     await sleep(500);
   }
@@ -55,7 +51,7 @@ try {
 
   const all = await fetch(`${base}/api/users`);
   assert.equal(all.status, 200);
-  assert.ok((await all.json()).some((item) => item._id === userId));
+  assert.ok((await all.json()).some((item) => item.id === userId));
 
   const updated = await fetch(`${base}/api/users/${userId}`, {
     method: 'PUT',
