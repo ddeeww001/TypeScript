@@ -14,6 +14,7 @@ FROM node:24-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
+ENV PORT=3000
 
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist

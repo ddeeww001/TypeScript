@@ -22,7 +22,7 @@ if (!Number.isInteger(port) || port < 1 || port > 65535) {
 app.use('/api', userRoutes);
 
 if (process.exitCode !== 1) {
-  const server = app.listen(port);
+  const server = app.listen(port, '0.0.0.0');
   server.on('listening', () => console.log(`Server is running on port ${port}`));
   server.on('error', (error: NodeJS.ErrnoException) => {
     console.error(error.code === 'EADDRINUSE'
