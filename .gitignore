@@ -2,6 +2,8 @@ node_modules/
 dist/
 .env
 .env.*
+!package.json
+!Dockerfile
 !.env.example
 .kilo/
 app.js
